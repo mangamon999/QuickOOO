@@ -1,0 +1,24 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".HomeActivity"
+    android:background="@drawable/item_background_shape"
+    android:elevation="8dp"
+    >
+
+    <TextView
+        android:id="@+id/text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="25sp"
+        android:text="Sample text"
+        android:gravity="center"
+        android:padding="28dp"
+        android:textColor="@color/icons"
+        android:background="?android:attr/selectableItemBackground"
+
+        >
+
+    </TextView>
+
+</LinearLayout>
