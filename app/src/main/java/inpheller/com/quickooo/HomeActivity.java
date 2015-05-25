@@ -1,6 +1,7 @@
 package inpheller.com.quickooo;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -29,6 +30,15 @@ public class HomeActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.d(getClass().getSimpleName(), "Clicked item");
+
+                Intent intent = new Intent(Intent.ACTION_SENDTO);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_EMAIL, "ooo@arctouch.com");
+                intent.putExtra(Intent.EXTRA_SUBJECT, "[OOO] I'll be out for " + timeListAdapter.getItem(position));
+                intent.putExtra(Intent.EXTRA_TEXT, "Hello guys,\n\nI'll be out for " + timeListAdapter.getItem(position)
+                        + ". I'll be available by the usual means.\n\n Thanks,\n\n");
+
+                startActivity(Intent.createChooser(intent, "Send Email"));
             }
         });
         timeList.setAdapter(timeListAdapter);
