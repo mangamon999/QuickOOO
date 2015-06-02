@@ -1,8 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomeActivity"
-    >
+    tools:context=".HomeActivity">
 
     <ListView
         android:id="@+id/time_list_view"
@@ -11,8 +10,8 @@
         android:dividerHeight="25dp"
         android:padding="25dp"
         android:clipToPadding="false"
-        android:divider="@android:color/transparent"
-        >
+        android:clipChildren="false"
+        android:divider="@android:color/transparent">
     </ListView>
 
 </RelativeLayout>
