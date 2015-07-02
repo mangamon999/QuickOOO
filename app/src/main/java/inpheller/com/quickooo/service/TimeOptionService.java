@@ -28,11 +28,11 @@ public class TimeOptionService extends Service<TimeOption> {
     }
 
     @Override
-    public ArrayList<TimeOption> fetchAll() {
+    public void fetchAll(FetchCompletionHandler<TimeOption> completionHandler) {
         getFirebaseRef().child(getPath());
-        return null;
     }
 
+    @Override
     public String getPath() {
         return path;
     }

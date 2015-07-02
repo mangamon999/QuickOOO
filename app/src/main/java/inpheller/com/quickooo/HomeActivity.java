@@ -16,16 +16,24 @@ import android.widget.Toast;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 
+import org.apache.http.MethodNotSupportedException;
+
+import java.util.ArrayList;
+
 import inpheller.com.quickooo.adapter.TimeListAdapter;
+import inpheller.com.quickooo.model.Subject;
 import inpheller.com.quickooo.model.TimeOption;
+import inpheller.com.quickooo.service.Service;
+import inpheller.com.quickooo.service.SubjectService;
 
 
-public class HomeActivity extends Activity {
+public class HomeActivity extends Activity implements MessageInputDialogFragment.MessageInputListener {
 
     ListView timeList;
     private ArrayAdapter<String> timeListAdapter;
     private Firebase myFirebaseRef;
     private static int count = 0;
+    private SubjectService subjectService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,15 +60,6 @@ public class HomeActivity extends Activity {
         timeList.setAdapter(timeListAdapter);
     }
 
-    private Firebase getService() {
-        if (myFirebaseRef == null) {
-            Firebase.setAndroidContext(this);
-            myFirebaseRef = new Firebase("https://quickooo.firebaseio.com");
-        }
-
-        return myFirebaseRef;
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -77,12 +76,36 @@ public class HomeActivity extends Activity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_add_option) {
-            TimeOption timeOption = new TimeOption("Fast", (count = count + 5) + " minutes", "I'll be back soon");
-            getService().push().setValue(timeOption, new Firebase.CompletionListener() {
+            MessageInputDialogFragment inputDialogFragment = new MessageInputDialogFragment();
+
+            inputDialogFragment.setListener(this);
+
+            inputDialogFragment.show(getFragmentManager(), "input dialog");
+
+            if (true) return true;
+
+//            TimeOption timeOption = new TimeOption("Fast", (count = count + 5) + " minutes", "I'll be back soon");
+//            getService().push().setValue(timeOption, new Firebase.CompletionListener() {
+//
+//                @Override
+//                public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+//                    Toast.makeText(HomeActivity.this, "New Value added", Toast.LENGTH_SHORT).show();
+//                }
+//            });
+//
+//            return true;
+        }
+
+        if (id == R.id.action_refresh) {
+            getSubjectService().fetchAll(new Service.FetchCompletionHandler<Subject>() {
+                @Override
+                public void onSuccess(ArrayList<Subject> items) {
+                    Toast.makeText(HomeActivity.this, items.toString(), Toast.LENGTH_LONG).show();
+                }
 
                 @Override
-                public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                    Toast.makeText(HomeActivity.this, "New Value added", Toast.LENGTH_SHORT).show();
+                public void onFailure(String errorMessage) {
+                    Toast.makeText(HomeActivity.this, "Fetch failed somehow", Toast.LENGTH_LONG).show();
                 }
             });
 
@@ -90,5 +113,24 @@ public class HomeActivity extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void messageCreated(String subject) {
+        getSubjectService().save(new Subject(subject));
+    }
+
+
+
+    private SubjectService getSubjectService() {
+        if (subjectService == null) {
+            subjectService = new SubjectService(this);
+        }
+        return subjectService;
+    }
+
+    @Override
+    public void messageCreationCanceled() {
+        // TODO: Handle cancelation
     }
 }

@@ -5,6 +5,7 @@ import android.content.Context;
 import com.firebase.client.Firebase;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 import inpheller.com.quickooo.model.TimeOption;
 
@@ -20,11 +21,18 @@ public abstract class Service<T> {
         myFirebaseRef = new Firebase(FIREBASE_BASE_URL);
     }
 
-    abstract void save(T timeOption);
+    public abstract String getPath();
 
-    abstract ArrayList<T> fetchAll();
+    public abstract void save(T timeOption);
+
+    public abstract void fetchAll(FetchCompletionHandler<T> completionHandler);
 
     public Firebase getFirebaseRef() {
-        return myFirebaseRef;
+        return myFirebaseRef.child(getPath());
+    }
+
+    public interface FetchCompletionHandler<T> {
+        void onSuccess(ArrayList<T> items);
+        void onFailure(String errorMessage);
     }
 }
